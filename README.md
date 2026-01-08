@@ -40,10 +40,10 @@ import {
 
 const salario = 2000000;
 
-// Hora extra diurna (6am - 9pm): +25%
+// Hora extra diurna (6am - 7pm): +25%
 const horaExtraDiurna = calcularHoraExtraDiurna(salario);
 
-// Hora extra nocturna (9pm - 6am): +75%
+// Hora extra nocturna (7pm - 6am): +75%
 const horaExtraNocturna = calcularHoraExtraNocturna(salario);
 
 // Hora ordinaria nocturna: +35%
