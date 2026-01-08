@@ -1,0 +1,132 @@
+# Ignorar node_modules
+node_modules/
+
+# Ignorar archivos compilados
+dist/
+
+# Ignorar archivos de entorno
+.env
+.env.local
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar archivos de test
+coverage/
+.nyc_output/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# pnpm-lock.yaml# yarn.lock# package-lock.json# Lock files opcionales (descomenta el que no uses)out/build/# Build outputs.cache/*.temp*.tmp# Archivos temporales*.lcov.nyc_output/coverage/# Archivos de testingThumbs.dbehthumbs.db.Trashes.Spotlight-V100._*.DS_Store?.DS_Store# Archivos de sistema operativo.DS_Store*~*.swo*.swp.idea/!.vscode/extensions.json.vscode/*# Archivos de IDE y editoreslerna-debug.log*pnpm-debug.log*yarn-error.log*yarn-debug.log*npm-debug.log**.loglogs# Logs.env.*.local.env.local.env# Archivos de entornodist/# Archivos compiladosnode_modules/node_modules/
+
+# Archivos compilados
+dist/
+build/
+*.js
+*.d.ts
+*.js.map
+
+# No ignorar archivos de configuración
+!*.config.js
+
+# Archivos de entorno
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Archivos de sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+*.sublime-project
+
+# Archivos de testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Archivos temporales
+*.tmp
+*.temp
+.cache/
+
+# Lock files (opcional, puedes descomentar si quieres incluirlos)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml

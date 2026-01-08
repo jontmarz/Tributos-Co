@@ -1,0 +1,18 @@
+export const CONSTANTES = {
+  UVT: 52374,
+  IVA_GENERAL: 0.19,
+  SMLMV: 1750905, // Valor para 2026
+  AUX_TRANSPORTE: 249095, // Valor para 2026
+  // Jornada laboral: 15 julio 2026 baja a 42h semanales
+  HORAS_MES_ANTES_JULIO: 220,
+  HORAS_MES_DESPUES_JULIO: 210,
+};
+
+export const TASAS_RECARGO = {
+  EXTRA_DIURNA: 0.25,
+  EXTRA_NOCTURNA: 0.75,
+  RECARGO_NOCTURNO: 0.35,
+  DOMINICAL_FESTIVO: 0.8, // Aumentado por ley para 2026
+  EXTRA_DIURNA_DOMINICAL: 2.05,
+  EXTRA_NOCTURNA_DOMINICAL: 2.55,
+};

@@ -1,0 +1,26 @@
+{
+  "name": "tributos-co",
+  "version": "1.0.0",
+  "description": "Cálculos de salario, recargos de salarios e impuestos (IVA, ICA, renta) en Colombia",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": ["colombia", "tributos", "impuestos", "salario", "nomina", "recargos", "horas-extras", "iva", "ica", "renta"],
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.9.3"
+  }
+}
