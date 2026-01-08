@@ -19,10 +19,10 @@ npm install tributos-co
 ### Calcular Hora Ordinaria
 
 ```typescript
-import { calcularHoraOrdinaria } from 'tributos-co';
+import { calcularHoraOrdinaria } from 'tributos-co'
 
 const salario = 1750905; // SMLMV 2026
-const valorHora = calcularHoraOrdinaria(salario);
+const valorHora = calcularHoraOrdinaria(salario)
 console.log(valorHora); // 7958.66
 ```
 
@@ -41,22 +41,22 @@ import {
 const salario = 2000000;
 
 // Hora extra diurna (6am - 7pm): +25%
-const horaExtraDiurna = calcularHoraExtraDiurna(salario);
+const horaExtraDiurna = calcularHoraExtraDiurna(salario)
 
 // Hora extra nocturna (7pm - 6am): +75%
-const horaExtraNocturna = calcularHoraExtraNocturna(salario);
+const horaExtraNocturna = calcularHoraExtraNocturna(salario)
 
 // Hora ordinaria nocturna: +35%
-const horaOrdinariaNocturna = calcularHoraOrdinariaNocturna(salario);
+const horaOrdinariaNocturna = calcularHoraOrdinariaNocturna(salario)
 
 // Hora dominical/festiva: +80%
-const horaDominical = calcularHoraDominicalFestiva(salario);
+const horaDominical = calcularHoraDominicalFestiva(salario)
 
 // Hora extra diurna dominical: +105%
-const horaExtraDiurnaDominical = calcularHoraExtraDiurnaDominical(salario);
+const horaExtraDiurnaDominical = calcularHoraExtraDiurnaDominical(salario)
 
 // Hora extra nocturna dominical: +155%
-const horaExtraNocturnaDominical = calcularHoraExtraNocturnaDominical(salario);
+const horaExtraNocturnaDominical = calcularHoraExtraNocturnaDominical(salario)
 ```
 
 ### Calcular Recargos Totales
@@ -127,12 +127,14 @@ const horaDespues = calcularHoraOrdinaria(2000000, fechaDespues); // 9523.81
 
 | Tipo de Hora | Horario | Recargo | Función |
 |--------------|---------|---------|---------|
-| Extra Diurna | 6am - 9pm | +25% | `calcularHoraExtraDiurna` |
-| Extra Nocturna | 9pm - 6am | +75% | `calcularHoraExtraNocturna` |
-| Ordinaria Nocturna | 9pm - 6am | +35% | `calcularHoraOrdinariaNocturna` |
+| Extra Diurna | 6am - 7pm | +25% | `calcularHoraExtraDiurna` |
+| Extra Nocturna | 7pm - 6am | +75% | `calcularHoraExtraNocturna` |
+| Ordinaria Nocturna | 7pm - 6am | +35% | `calcularHoraOrdinariaNocturna` |
 | Dominical/Festiva | Domingo/Festivo | +80% | `calcularHoraDominicalFestiva` |
-| Extra Diurna Dominical | Domingo/Festivo 6am-9pm | +105% | `calcularHoraExtraDiurnaDominical` |
-| Extra Nocturna Dominical | Domingo/Festivo 9pm-6am | +155% | `calcularHoraExtraNocturnaDominical` |
+| Extra Diurna Dominical - 1/ene al 30/jun 2026 | Domingo/Festivo 6am-7pm | +105% | `calcularHoraExtraDiurnaDominical` |
+ Extra Nocturna Dominical - 1/ene al 30/jun 2026 | Domingo/Festivo 7pm-6am | +115% | `calcularHoraExtraNocturnaDominical` |
+| Extra Diurna Dominical - 1/jul al 31/dic 2026| Domingo/Festivo 6am-7pm | +155% | `calcularHoraExtraDiurnaDominical` |
+| Extra Nocturna Dominical - 1/jul al 31/dic 2026 | Domingo/Festivo 7pm-6am | +165% | `calcularHoraExtraNocturnaDominical` |
 
 ## API Completa
 
