@@ -1,6 +1,6 @@
 {
   "name": "tributos-co",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Cálculos de salario, recargos de salarios e impuestos (IVA, ICA, renta) en Colombia",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
