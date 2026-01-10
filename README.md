@@ -1,9 +1,12 @@
 # Tributos-CO 🇨🇴
 
-Paquete npm para calcular recargos salariales, horas extras y otros tributos aplicables en Colombia (Actualizado a normativa 2026).
+Paquete npm para calcular recargos salariales, horas extras, prestaciones sociales, seguridad social y otros tributos aplicables en Colombia (Actualizado a normativa 2026).
 
 ## Características
 - ✅ **Cálculo de Recargos:** Horas extras diurnas, nocturnas, recargos nocturnos, dominicales y festivos.
+- ✅ **Prestaciones Sociales:** Cesantías, prima, intereses sobre cesantías y vacaciones.
+- ✅ **Seguridad Social:** Salud, pensión, ARL, caja de compensación y parafiscales.
+- ✅ **Validaciones:** Salario mínimo, auxilio de transporte, salario integral y deducciones.
 - ✅ **Jornada Flexible:** Ajuste automático de horas mensuales según la Ley 2101 de 2021 (Reducción de jornada a partir del 15 de julio 2026).
 - ✅ **Todas las combinaciones:** Extra diurna, extra nocturna, dominical, extra diurna dominical, extra nocturna dominical.
 - ✅ **TypeScript:** Tipado fuerte para evitar errores en cálculos financieros.
@@ -99,6 +102,9 @@ import { CONSTANTES, TASAS_RECARGO } from 'tributos-co';
 console.log(CONSTANTES.SMLMV);              // 1750905
 console.log(CONSTANTES.AUX_TRANSPORTE);     // 249095
 console.log(CONSTANTES.UVT);                // 52374
+console.log(CONSTANTES.MINIMO_INTEGRAL);    // 22761765 (13 SMLMV)
+console.log(CONSTANTES.DOS_MINIMOS);        // 3501810
+console.log(CONSTANTES.CUATRO_MINIMOS);     // 7003620
 
 console.log(TASAS_RECARGO.EXTRA_DIURNA);              // 0.25
 console.log(TASAS_RECARGO.EXTRA_NOCTURNA);            // 0.75
@@ -107,6 +113,124 @@ console.log(TASAS_RECARGO.DOMINICAL_FESTIVO);         // 0.8
 console.log(TASAS_RECARGO.EXTRA_DIURNA_DOMINICAL);    // 2.05
 console.log(TASAS_RECARGO.EXTRA_NOCTURNA_DOMINICAL);  // 2.55
 ```
+
+### Calcular Prestaciones Sociales
+
+```typescript
+import { calcularPrestacionesSociales } from 'tributos-co';
+
+const salario = 2000000;
+const prestaciones = calcularPrestacionesSociales(salario);
+
+console.log(prestaciones);
+/*
+{
+  cesantias: 166666.67,      // 8.33% mensual
+  prima: 166666.67,          // 8.33% mensual
+  interesesCesantias: 240000, // 12% anual sobre cesantías
+  vacaciones: 83333.33,      // 4.17% mensual
+  totalMensual: 416666.67,
+  totalAnual: 5240000
+}
+*/
+```
+
+### Calcular Seguridad Social
+
+```typescript
+import { calcularSeguridadSocial, calcularParafiscales } from 'tributos-co';
+
+const salario = 2000000;
+
+// Seguridad Social
+const seguridadSocial = calcularSeguridadSocial(salario, 1); // Riesgo ARL tipo 1
+
+console.log(seguridadSocial);
+/*
+{
+  ibc: 2000000,
+  saludEmpleado: 80000,      // 4%
+  saludEmpleador: 170000,    // 8.5%
+  totalSalud: 250000,        // 12.5%
+  pensionEmpleado: 80000,    // 4%
+  pensionEmpleador: 240000,  // 12%
+  totalPension: 320000,      // 16%
+  arl: 10440,                // 0.522% (Riesgo I)
+  totalEmpleado: 160000,     // Descuento al empleado
+  totalEmpleador: 420440,    // Costo para empleador
+  totalSeguridadSocial: 580440
+}
+*/
+
+// Parafiscales
+const parafiscales = calcularParafiscales(salario);
+
+console.log(parafiscales);
+/*
+{
+  cajaCompensacion: 80000,   // 4%
+  icbf: 60000,               // 3% (si salario > 10 SMLMV, sino 0)
+  sena: 40000,               // 2% (si salario > 10 SMLMV, sino 0)
+  totalParafiscales: 180000,
+  exentoIcbfSena: false
+}
+*/
+```
+
+### Validaciones y Deducciones
+
+```typescript
+import { 
+  validarSalarioMinimo,
+  tieneDerechoAuxilioTransporte,
+  esSalarioIntegral,
+  calcularDeducciones,
+  puedeRecibirValesExentos
+} from 'tributos-co';
+
+const salario = 2000000;
+
+// Validaciones
+console.log(validarSalarioMinimo(salario));          // true
+console.log(tieneDerechoAuxilioTransporte(salario)); // true (si <= 2 SMLMV)
+console.log(esSalarioIntegral(salario));             // false (< 13 SMLMV)
+console.log(puedeRecibirValesExentos(salario));      // true (si anual <= 310 UVT)
+
+// Deducciones
+const deducciones = calcularDeducciones({
+  numeroDependientes: 2,
+  gastosSalud: 2000000,
+  pagosVivienda: 6000000
+});
+
+console.log(deducciones);
+/*
+{
+  dependientes: 3352000,     // 32 UVT x 2
+  salud: 1676000,            // máximo 32 UVT
+  vivienda: 5237000,         // máximo 100 UVT
+  totalDeducciones: 10265000
+}
+*/
+```
+
+#### ℹ️ ¿Por qué están incluidas las deducciones de salud y vivienda?
+
+Estas deducciones están incluidas porque afectan el **costo total de nómina** y ayudan a estimar el **salario neto real** del empleado:
+
+**Deducción por Salud (máximo 32 UVT = $1,676,000 anuales):**
+- Gastos médicos, medicamentos, seguros de salud
+- Incluye pagos por medicina prepagada
+- Reduce la base para cálculo de retención en la fuente
+- **Uso en nómina:** Permite estimar cuánto recibirá efectivamente el empleado
+
+**Deducción por Vivienda (máximo 100 UVT = $5,237,400 anuales):**
+- Intereses de crédito hipotecario
+- Arrendamiento de vivienda de habitación
+- Impuesto predial
+- **Uso en nómina:** Ayuda a calcular el salario neto disponible para el empleado
+
+> **Nota:** Estas deducciones son **informativas** y sirven para estimar el impacto de retención en la fuente en el salario del empleado. Este paquete NO calcula directamente la retención en la fuente, ya que su enfoque principal es el **cálculo de costos laborales para el empleador** (prestaciones, seguridad social y recargos salariales).
 
 ## Reforma Laboral 2026
 
@@ -138,7 +262,7 @@ const horaDespues = calcularHoraOrdinaria(2000000, fechaDespues); // 9523.81
 
 ## API Completa
 
-### Funciones
+### Funciones de Horas y Recargos
 
 #### `calcularHoraOrdinaria(salario, fecha?)`
 Calcula el valor de la hora ordinaria.
@@ -181,6 +305,98 @@ Calcula todos los recargos salariales.
 - `totalRecargos`: Suma de todos los recargos
 - `totalNomina`: Salario + recargos
 
+### Funciones de Prestaciones Sociales
+
+#### `calcularCesantias(salario)`
+Calcula las cesantías mensuales (8.33%).
+
+#### `calcularPrima(salario)`
+Calcula la prima de servicios mensual (8.33%).
+
+#### `calcularInteresesCesantias(salario, meses?)`
+Calcula los intereses sobre cesantías (12% anual).
+
+#### `calcularVacaciones(salario)`
+Calcula las vacaciones mensuales (4.17% - 15 días por año).
+
+#### `calcularPrestacionesSociales(salario, mesesTrabajados?)`
+Calcula todas las prestaciones sociales.
+
+**Retorna:** Objeto `PrestacionesSociales` con cesantías, prima, intereses, vacaciones y totales.
+
+#### `calcularSalarioBasePrestaciones(salario)`
+Calcula el salario base para prestaciones (incluye auxilio de transporte si aplica).
+
+### Funciones de Seguridad Social
+
+#### `calcularIBC(salario)`
+Calcula el Ingreso Base de Cotización para seguridad social.
+
+#### `obtenerTasaARL(riesgo)`
+Obtiene la tasa de ARL según el tipo de riesgo (1-5).
+
+#### `calcularSeguridadSocial(salario, riesgoARL?)`
+Calcula todos los aportes a seguridad social.
+
+**Parámetros:**
+- `salario`: Salario mensual base
+- `riesgoARL`: Tipo de riesgo (1-5, default: 1)
+
+**Retorna:** Objeto `SeguridadSocial` con detalle de salud, pensión, ARL y totales.
+
+#### `calcularParafiscales(salario)`
+Calcula los aportes parafiscales (Caja Compensación, ICBF, SENA).
+
+**Retorna:** Objeto `Parafiscales` con detalle de cada aporte.
+
+#### `calcularCostoTotalSeguridadSocial(salario, riesgoARL?)`
+Calcula el costo total de seguridad social y parafiscales para el empleador.
+
+#### `calcularSalarioNeto(salario, riesgoARL?)`
+Calcula el salario neto después de deducciones de seguridad social.
+
+### Funciones de Validaciones y Deducciones
+
+#### `validarSalarioMinimo(salario)`
+Valida si un salario cumple con el mínimo legal.
+
+#### `tieneDerechoAuxilioTransporte(salario)`
+Verifica si el trabajador tiene derecho a auxilio de transporte (≤ 2 SMLMV).
+
+#### `estaExentoIcbfSena(salario)`
+Verifica si está exento de ICBF y SENA (≤ 10 SMLMV).
+
+#### `esSalarioIntegral(salario)`
+Verifica si es salario integral (≥ 13 SMLMV).
+
+#### `puedeRecibirValesExentos(salario)`
+Verifica si puede recibir vales de alimentación exentos (anual ≤ 310 UVT).
+
+#### `requiereDotacion(salario)`
+Verifica si el trabajador requiere dotación (≤ 2 SMLMV).
+
+#### `calcularDeducciones(params)`
+Calcula todas las deducciones fiscales permitidas.
+
+**Parámetros:**
+- `params.numeroDependientes`: Número de dependientes
+- `params.gastosSalud`: Gastos en salud
+- `params.pagosVivienda`: Pagos por vivienda
+
+**Retorna:** Objeto `Deducciones` con detalle de cada deducción.
+
+#### `calcularDeduccionDependientes(numeroDependientes)`
+Calcula deducción por dependientes (32 UVT por dependiente).
+
+#### `calcularDeduccionSalud(gastosSalud)`
+Calcula deducción por salud (máximo 32 UVT).
+
+#### `calcularDeduccionVivienda(pagosVivienda)`
+Calcula deducción por vivienda (máximo 100 UVT).
+
+#### `calcularMontoMaximoVales(salario)`
+Calcula el monto máximo mensual de vales exentos (41 UVT anuales).
+
 ### Tipos
 
 #### `RecargosInput`
@@ -193,6 +409,61 @@ interface RecargosInput {
   extrasDiurnasDominicales?: number;   // Horas extras diurnas dominicales
   extrasNocturnasDominicales?: number; // Horas extras nocturnas dominicales
 }
+```
+
+#### `PrestacionesSociales`
+```typescript
+interface PrestacionesSociales {
+  cesantias: number;
+  prima: number;
+  interesesCesantias: number;
+  vacaciones: number;
+  totalMensual: number;
+  totalAnual: number;
+}
+```
+
+#### `SeguridadSocial`
+```typescript
+interface SeguridadSocial {
+  ibc: number;
+  saludEmpleado: number;
+  saludEmpleador: number;
+  totalSalud: number;
+  pensionEmpleado: number;
+  pensionEmpleador: number;
+  totalPension: number;
+  arl: number;
+  totalEmpleado: number;
+  totalEmpleador: number;
+  totalSeguridadSocial: number;
+}
+```
+
+#### `Parafiscales`
+```typescript
+interface Parafiscales {
+  cajaCompensacion: number;
+  icbf: number;
+  sena: number;
+  totalParafiscales: number;
+  exentoIcbfSena: boolean;
+}
+```
+
+#### `Deducciones`
+```typescript
+interface Deducciones {
+  dependientes: number;
+  salud: number;
+  vivienda: number;
+  totalDeducciones: number;
+}
+```
+
+#### `TipoRiesgoARL`
+```typescript
+type TipoRiesgoARL = 1 | 2 | 3 | 4 | 5;
 ```
 
 ## Licencia
