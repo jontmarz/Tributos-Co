@@ -25,7 +25,7 @@ export const TASAS_RECARGO = {
   EXTRA_DIURNA: 0.25,
   EXTRA_NOCTURNA: 0.75,
   RECARGO_NOCTURNO: 0.35,
-  DOMINICAL_FESTIVO: 0.8, // Aumentado por ley para 2026
+  DOMINICAL_FESTIVO: 0.9, // Aumentado por ley para 2026 y actualizado para el 1 de Julio de 2026
   EXTRA_DIURNA_DOMINICAL: 2.05,
   EXTRA_NOCTURNA_DOMINICAL: 2.55,
 };
